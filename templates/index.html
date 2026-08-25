@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ProductScout</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: linear-gradient(150deg, #f0edff 0%, #faf8ff 60%, #e9e3ff 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 16px;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 44px 40px 40px;
+      width: 100%;
+      max-width: 520px;
+      border: 1px solid #e8e2ff;
+    }
+
+    .brand { display: flex; align-items: center; gap: 8px; margin-bottom: 24px; }
+    .brand-dot { width: 8px; height: 8px; background: #7c3aed; border-radius: 50%; }
+    .brand-name { font-size: 12px; font-weight: 700; color: #7c3aed; letter-spacing: 2.5px; text-transform: uppercase; }
+
+    h1 { font-size: 28px; font-weight: 800; color: #1a1a2e; letter-spacing: -0.8px; line-height: 1.2; margin-bottom: 6px; }
+    h1 em { font-style: normal; color: #7c3aed; }
+
+    .sub { font-size: 13px; color: #b0a8cc; margin-bottom: 32px; line-height: 1.6; }
+
+    .field { margin-bottom: 18px; }
+    .field label {
+      display: block; font-size: 11px; font-weight: 700; color: #7c3aed;
+      letter-spacing: 1px; text-transform: uppercase; margin-bottom: 7px;
+    }
+    .field input, .field select {
+      width: 100%; background: #faf9ff; border: 1.5px solid #ede9fe;
+      border-radius: 10px; padding: 11px 14px; font-size: 14px; color: #1a1a2e;
+      outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+      appearance: none; -webkit-appearance: none;
+    }
+    .field input:focus, .field select:focus {
+      border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,0.08);
+    }
+    .field input::placeholder { color: #d0c8f0; }
+
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    .rgroup { display: flex; gap: 7px; }
+    .rb {
+      flex: 1; background: #faf9ff; border: 1.5px solid #ede9fe;
+      border-radius: 9px; padding: 9px 4px; font-size: 12px; font-weight: 700;
+      color: #a78bfa; cursor: pointer; text-align: center;
+      transition: all 0.15s; user-select: none;
+    }
+    .rb.on { background: #7c3aed; color: #fff; border-color: #7c3aed; }
+    .rb:hover:not(.on) { background: #f0edff; border-color: #c4b5fd; color: #7c3aed; }
+
+    .opt-label {
+      font-size: 11px; font-weight: 600; color: #d0c8f0; letter-spacing: 1px;
+      text-transform: uppercase; text-align: center; margin: 20px 0 16px; position: relative;
+    }
+    .opt-label::before, .opt-label::after {
+      content: ''; position: absolute; top: 50%; width: 38%; height: 1px; background: #f0edff;
+    }
+    .opt-label::before { left: 0; } .opt-label::after { right: 0; }
+
+    .submit {
+      width: 100%; background: #7c3aed; color: #fff; border: none;
+      padding: 14px; border-radius: 12px; font-size: 14px; font-weight: 700;
+      cursor: pointer; transition: background 0.2s, transform 0.15s;
+      margin-top: 10px; letter-spacing: 0.4px;
+    }
+    .submit:hover { background: #6d28d9; transform: translateY(-1px); }
+    .submit:active { transform: scale(0.98); }
+
+    /* hidden input to carry rating value */
+    input[name="min_rating"] { display: none; }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="brand">
+      <div class="brand-dot"></div>
+      <div class="brand-name">ProductScout</div>
+    </div>
+
+    <h1>Find winning Amazon<br>products <em>in seconds.</em></h1>
+    <p class="sub">Set your criteria. We search, filter and drop results straight into your Google Sheet.</p>
+
+    <form action="/search" method="POST">
+
+      <div class="field">
+        <label>Product keyword</label>
+        <input type="text" name="keyword" placeholder="yoga mat, knife set, led strips..." required>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label>Category</label>
+          <select name="category">
+            <option value="">All categories</option>
+            <option>Electronics</option>
+            <option>Kitchen</option>
+            <option>Sports &amp; fitness</option>
+            <option>Beauty &amp; care</option>
+            <option>Home &amp; garden</option>
+            <option>Toys &amp; games</option>
+            <option>Pet supplies</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Max price ($)</label>
+          <input type="number" name="max_price" placeholder="30" min="1">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Min rating</label>
+        <div class="rgroup">
+          <div class="rb" onclick="setR(this,'3.0')">3.0+</div>
+          <div class="rb" onclick="setR(this,'3.5')">3.5+</div>
+          <div class="rb on" onclick="setR(this,'4.0')">4.0+</div>
+          <div class="rb" onclick="setR(this,'4.5')">4.5+</div>
+        </div>
+        <input type="hidden" name="min_rating" id="min_rating" value="4.0">
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label>Min reviews</label>
+          <input type="number" name="min_reviews" placeholder="100" min="0">
+        </div>
+        <div class="field">
+          <label>No. of results</label>
+          <input type="number" name="num_results" value="20" min="1" max="100">
+        </div>
+      </div>
+
+      <div class="opt-label">optional</div>
+
+      <div class="field">
+        <label>Exclude keywords</label>
+        <input type="text" name="exclude" placeholder="used, refurbished, broken...">
+      </div>
+
+      <button type="submit" class="submit">Search &amp; export to Google Sheets →</button>
+
+    </form>
+  </div>
+
+  <script>
+    function setR(el, val) {
+      document.querySelectorAll('.rb').forEach(b => b.classList.remove('on'));
+      el.classList.add('on');
+      document.getElementById('min_rating').value = val;
+    }
+  </script>
+
+</body>
+</html>
