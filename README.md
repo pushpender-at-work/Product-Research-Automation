@@ -1,28 +1,75 @@
-#Online Product Researcher
+# ProductScout 🔍
 
-A tool that takes product details from the user and automatically scrapes google for that product data and pushes it into a google sheet.
+> Find winning Amazon products in seconds — set your filters, we handle the rest.
 
-##what it does
+ProductScout lets you search and filter Amazon products by keyword, category, price, rating and reviews — and dumps everything straight into your Google Sheet. No manual searching, no copy-pasting.
 
-user fills a form with product info like name, category, price range, reviews etc. the tool searches google using serpapi, collects the results and writes everything directly into a google sheet — no manual copy paste needed.
+![ProductScout UI](screenshot.png)
 
-##tech used
--Python
-SerpAPI — to search google programmatically
-gspread — to write data into google sheets
-HTML — for the user input form
-how to run
+---
+
+## How it works
+
+1. Enter a product keyword (e.g. `yoga mat`, `led strips`)
+2. Set your filters — category, max price, min rating, min reviews
+3. Hit **Search & export to Google Sheets**
+4. Results land in your Google Sheet instantly
+
+---
+
+## Tech Stack
+
+| Layer | Tool |
+|-------|------|
+| Frontend | HTML + CSS |
+| Search | SerpAPI (Google Shopping results) |
+| Sheets | gspread (Google Sheets API) |
+| Backend | Python |
+
+---
+
+## Setup
+
+**1. Clone the repo**
+```bash
+git clone https://github.com/pushpender-at-work/Product-Research-Automation.git
+cd Product-Research-Automation
 pip install -r requirements.txt
-python app.py
-setup
-get your api key from serpapi.com
-set up google sheets api credentials from google cloud console, download the json key
-create a .env file and add:
-SERPAPI_KEY=your_key_here
-put your google credentials json file in the project folder
-update the sheet name in the code to match your google sheet
-flow
-user fills form → serpapi searches google → data extracted → pushed to google sheet
-note
+```
 
-make sure your google sheet is shared with the service account email from your credentials json file otherwise gspread will throw a permission error.
+**2. Add your API keys**
+
+Create a `.env` file:
+
+SERPAPI_KEY=your_serpapi_key_here
+
+
+**3. Add Google Sheets credentials**
+
+- Go to Google Cloud Console
+- Create a service account → download the JSON key
+- Save it as `credentials.json` in the project folder
+- Share your Google Sheet with the service account email
+
+**4. Run**
+```bash
+python app.py
+```
+
+---
+
+## Filters available
+
+- Product keyword
+- Category
+- Max price
+- Min rating (3.0 / 3.5 / 4.0 / 4.5)
+- Min reviews
+- Number of results
+- Exclude keywords
+
+---
+
+## Note
+
+`credentials.json` is not committed to this repo for security reasons. You need to generate your own from Google Cloud Console.
