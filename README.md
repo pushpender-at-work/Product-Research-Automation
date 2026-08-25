@@ -1,13 +1,13 @@
-Online Product Researcher
+#Online Product Researcher
 
-a tool that takes product details from the user and automatically scrapes google for that product data and pushes it into a google sheet.
+A tool that takes product details from the user and automatically scrapes google for that product data and pushes it into a google sheet.
 
-what it does
+##what it does
 
 user fills a form with product info like name, category, price range, reviews etc. the tool searches google using serpapi, collects the results and writes everything directly into a google sheet — no manual copy paste needed.
 
-tech used
-Python
+##tech used
+-Python
 SerpAPI — to search google programmatically
 gspread — to write data into google sheets
 HTML — for the user input form
